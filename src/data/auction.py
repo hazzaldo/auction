@@ -57,24 +57,40 @@ class Auction:
             return True
         else:
             return False
-
-    def process_bid(self, bid: Bid) -> str:
-        """
-        Processes the bid for a number of outcomes 
-        
-        :param bid: (Bid) the incoming bid to process
-        :return: (str) the bid status message
-        """
-        bid_status_message = f'Auction ID: {self.auction_id}. Bid by {bid.account_id}. '
-        error = self.validate_bid(bid)
-        if error:
-            return bid_status_message + error
-        else:
-            if self.is_bid_higher(bid):
-                return bid_status_message + f'Bid with amount: {bid.amount} is now the new highest bid'
-            elif not self.is_bid_lagging(bid):
-                return bid_status_message + f'Bid with amount: {bid.amount} is insufficient.'
-            else: 
-                return bid_status_message + f'Bid with amount: {bid.amount} is insufficient. Receipt of bid is lagging'
             
+    def get_accepted_bid_message(self, bid: Bid) -> str:
+        """
+        Get the accepted message log for the incoming bid as the new highest bid  
         
+        :param bid: (Bid) the incoming bid
+        :return: (str) the accepted bid message log
+        """
+        return f'Auction ID: {self.auction_id}. Bid by {bid.account_id}. Bid with amount: {bid.amount} is now the new highest bid'
+
+    def get_insufficient_bid_message(self, bid: Bid) -> str:
+        """
+        Get the message log for the incoming bid with insufficient bid   
+        
+        :param bid: (Bid) the incoming bid
+        :return: (str) the insufficient bid message log
+        """
+        return f'Auction ID: {self.auction_id}. Bid by {bid.account_id}. Bid with amount: {bid.amount} is insufficient.'
+
+    def get_insufficient_lagging_bid_message(self, bid: Bid) -> str:
+        """
+        Get the message log for the incoming bid with insufficient bid and lagging   
+        
+        :param bid: (Bid) the incoming bid
+        :return: (str) the insufficient and lagging bid message log
+        """
+        return f'Auction ID: {self.auction_id}. Bid by {bid.account_id}. Bid with amount: {bid.amount} is insufficient.'
+
+    def get_invalid_bid_message(self, bid: Bid, error: str) -> str:
+        """
+        Get the message log for an invalid bid   
+        
+        :param bid: (Bid) the incoming bid
+        :param error: (str) the error passed from bid validation
+        :return: (str) the invalid bid message log
+        """
+        return f'Auction ID: {self.auction_id}. Bid by {bid.account_id}. ' + error
