@@ -53,3 +53,16 @@ def test_adding_lower_bid_to_auction(create_auction_context):
     assert new_bid != auction.highest_bid
     assert new_bid not in auction.bids
     assert message == auction.get_insufficient_bid_message(new_bid)
+
+def test_adding_lower_bid_lagging_to_auction(create_auction_context):
+    print('\n=> Testing adding a lower bid lagging')
+    auction = create_auction_context.get('auction')
+    bid = create_auction_context.get('bid')
+    new_bid = Bid.generate()
+    new_bid.amount = bid.amount - 1
+    new_bid.time_unit = bid.time_unit - 1
+    new_bid.auction_id = auction.auction_id
+    message = auction.process_bid(new_bid)
+    assert new_bid != auction.highest_bid
+    assert new_bid not in auction.bids
+    assert message == auction.get_insufficient_lagging_bid_message(new_bid)
