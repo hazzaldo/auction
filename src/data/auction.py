@@ -42,8 +42,9 @@ class Auction:
         :param bid: (Bid) the incoming bid to check
         :return: (bool) True if incoming bid is higher than current highest bid, otherwise False
         """
-        if bid.amount > self.highest_bid or self.highest_bid is None:
-            self.highest_bid = bid_amount
+        if self.highest_bid is None or bid.amount > self.highest_bid.amount:
+            self.highest_bid = bid
+            self.bids.append(bid)
             return True
         else:
             return False
@@ -106,11 +107,11 @@ class Auction:
         """
         error = self.validate_bid(bid)
         if error:
-            return self.get_invalid_bid_message(self, bid, error)
+            return self.get_invalid_bid_message(bid, error)
         else:
             if self.is_bid_higher(bid):
-                return self.get_accepted_bid_message(self, bid)
+                return self.get_accepted_bid_message(bid)
             elif not self.is_bid_lagging(bid):
-                return self.get_insufficient_bid_message(self, bid)
+                return self.get_insufficient_bid_message(bid)
             else: 
-                return self.get_insufficient_lagging_bid_message(self, bid)
+                return self.get_insufficient_lagging_bid_message(bid)
