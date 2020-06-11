@@ -4,7 +4,6 @@ class Auction:
     This class is responsible for managing an auction's bids.
 
     """
-
     def __init__(self, auction_id: int) -> None:
         """
         The constructor for the Auction class.
@@ -16,6 +15,12 @@ class Auction:
         self.bids=[]
 
     def validate_bid(self, bid) -> str:
+        """
+        Validates the bid
+        
+        :param bid: (Bid) the bid to validate
+        :return: (str) error message if bid is invalid, otherwise empty string
+        """
         if bid.auction_id == self.auction_id:
             if not isinstance(bid.amount, int):
                 return 'Error, bid amount should be of type integer.'
@@ -25,7 +30,7 @@ class Auction:
                 return ''
         else:
             return "Error, the passed bid's auction id does not match the current auction instance's auction id"
-         
+
 
 
 
