@@ -22,7 +22,9 @@ class Auction:
         :return: (str) error message if bid is invalid, otherwise empty string
         """
         if bid.auction_id == self.auction_id:
-            if not isinstance(bid.amount, int):
+            if not isinstance(bid.time_unit, int):
+                return 'Error, bid time unit should be of type integer.'
+            elif not isinstance(bid.amount, int):
                 return 'Error, bid amount should be of type integer.'
             elif bid.amount < 0:
                 return 'Error, bid amount is a negative number. It should be a positive number' 
