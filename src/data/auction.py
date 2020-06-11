@@ -13,7 +13,7 @@ class Auction:
         """
         self.auction_id = auction_id
         self.highest_bid=None 
-        self.bids=None
+        self.bids=[]
 
     def validate_bid(self, bid) -> str:
         if bid.auction_id == self.auction_id:
@@ -25,7 +25,6 @@ class Auction:
                 return ''
         else:
             return "Error, the passed bid's auction id does not match the current auction instance's auction id"
-
          
 
 
