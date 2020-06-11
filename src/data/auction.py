@@ -45,3 +45,15 @@ class Auction:
             return True
         else:
             return False
+
+    def is_bid_lagging(self, bid) -> bool:
+        """
+        Checks if the incoming bid is lagging
+        
+        :param bid: (Bid) the incoming bid to check
+        :return: (bool) True if incoming bid is lagging, otherwise False
+        """
+        if bid.time_unit < self.highest_bid.time_unit:
+            return True
+        else:
+            return False
