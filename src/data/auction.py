@@ -57,3 +57,24 @@ class Auction:
             return True
         else:
             return False
+
+    def process_bid(self, bid: Bid) -> str:
+        """
+        Processes the bid for a number of outcomes 
+        
+        :param bid: (Bid) the incoming bid to process
+        :return: (str) the bid status message
+        """
+        bid_status_message = f'Auction ID: {self.auction_id}. Bid by {bid.account_id}. '
+        error = self.validate_bid(bid)
+        if error:
+            return bid_status_message + error
+        else:
+            if self.is_bid_higher(bid):
+                return bid_status_message + f'Bid with amount: {bid.amount} is now the new highest bid'
+            elif not self.is_bid_lagging(bid):
+                return bid_status_message + f'Bid with amount: {bid.amount} is insufficient.'
+            else: 
+                return bid_status_message + f'Bid with amount: {bid.amount} is insufficient. Receipt of bid is lagging'
+            
+        
