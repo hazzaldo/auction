@@ -94,3 +94,21 @@ class Auction:
         :return: (str) the invalid bid message log
         """
         return f'Auction ID: {self.auction_id}. Bid by {bid.account_id}. ' + error
+
+    def process_bid(self, bid: Bid) -> str:
+        """
+        Processes the bid for a number of outcomes 
+        
+        :param bid: (Bid) the incoming bid to process
+        :return: (str) the bid status message log
+        """
+        error = self.validate_bid(bid)
+        if error:
+            return self.get_invalid_bid_message(self, bid, error)
+        else:
+            if self.is_bid_higher(bid):
+                return self.get_accepted_bid_message(self, bid)
+            elif not self.is_bid_lagging(bid):
+                return self.get_insufficient_bid_message(self, bid)
+            else: 
+                return self.get_insufficient_lagging_bid_message(self, bid)
