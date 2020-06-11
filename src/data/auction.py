@@ -31,8 +31,15 @@ class Auction:
         else:
             return "Error, the passed bid's auction id does not match the current auction instance's auction id"
 
-
-
-
-
-
+        def is_bid_higher(self, bid) -> bool:
+        """
+        Checks if the incoming bid is higher than the current highest bid
+        
+        :param bid: (Bid) the incoming bid to check
+        :return: (bool) True if incoming bid is higher than current highest bid, otherwise False
+        """
+        if bid.amount > self.highest_bid or self.highest_bid is None:
+            self.highest_bid = bid_amount
+            return True
+        else:
+            return False
