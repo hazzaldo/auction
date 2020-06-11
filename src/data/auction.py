@@ -33,7 +33,7 @@ class Auction:
         else:
             return "Error, the passed bid's auction id does not match the current auction instance's auction id"
 
-        def is_bid_higher(self, bid) -> bool:
+    def is_bid_higher(self, bid) -> bool:
         """
         Checks if the incoming bid is higher than the current highest bid
         
