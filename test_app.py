@@ -26,3 +26,18 @@ def test_adding_higher_bid_to_auction(create_auction_context):
     assert new_bid == auction.highest_bid
     assert new_bid in auction.bids
     assert message == auction.get_accepted_bid_message(new_bid)
+
+def test_adding_invalid_bids_to_auction(create_auction_context):
+    print('\n=> Testing adding invalid bids to an auction')
+    auction = create_auction_context.get('auction')
+    new_bid_1 = Bid.generate()
+    new_bid_1.amount = -100
+    message_1 = auction.process_bid(new_bid_1)
+    error_1 = auction.validate_bid(new_bid_1)
+    assert message_1 == auction.get_invalid_bid_message(new_bid_1, error_1)
+
+    new_bid_2 = Bid.generate()
+    new_bid_2.auction_id = auction.auction_id+1
+    message_2 = auction.process_bid(new_bid_2)
+    error_2 = auction.validate_bid(new_bid_2)
+    assert message_2 == auction.get_invalid_bid_message(new_bid_2, error_2)
