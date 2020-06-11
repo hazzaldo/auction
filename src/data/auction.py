@@ -1,4 +1,6 @@
 
+from src.data.bid import Bid
+
 class Auction:
     """
     This class is responsible for managing an auction's bids.
