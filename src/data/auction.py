@@ -98,7 +98,7 @@ class Auction:
         :param bid_amount: (int) the incoming bid amount
         :return: (str) the insufficient and lagging bid message log
         """
-        return self.prefix_standard_message(bid_account_id) + f'Bid with amount: {bid_amount} is insufficient.'
+        return self.prefix_standard_message(bid_account_id) + f'Bid with amount: {bid_amount} is insufficient and lagging'
 
     def get_invalid_bid_message(self, bid_account_id: int, error: str) -> str:
         """
