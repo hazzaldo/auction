@@ -1,5 +1,5 @@
 
-from src.data.bid import Bid
+from data.bid import Bid
 
 class Auction:
     """

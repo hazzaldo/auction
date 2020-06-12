@@ -1,5 +1,5 @@
-from src.data.auction import Auction
-from src.data.bid import Bid
+from data.auction import Auction
+from data.bid import Bid
 
 class AuctionList:
     """
