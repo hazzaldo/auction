@@ -1,5 +1,5 @@
-from data import AuctionData
-from data.auction_list import AuctionList
+from src.data import AuctionData
+from src.data.auction_list import AuctionList
 import logging
 import os
 
