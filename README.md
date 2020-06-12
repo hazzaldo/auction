@@ -22,19 +22,19 @@ Navigate to the project root directory, where you can see the `requirements.txt`
 pip install -r requirements.txt
 ```
 
-To run the Python program, navigate to the `src` folder, and run the command:
+To run the Python program, navigate to the project root directory folder, and run the command:
 ```
 python main.py
 ```
 
-This will create/output two log files to the `src` folder:
+This will create/output two log files to the project root directory:
 
 - `log_file.log` - which contains the output logs for all bids.
 
 - `winning_bids_log_file.txt` - which contains the output logs for only the winning bids.
  
 ### Running the tests
-The automated test are in the `test_app.py` file, in the project root directory. To run the tests, please ensure you're navigated to the project root directory and run the command:
+The automated test are in the `test_app.py` file, in the project root directory. To run the tests, please ensure you're in the project root directory and run the command:
 ```
 pytest
 ```
