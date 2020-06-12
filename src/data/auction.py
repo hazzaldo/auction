@@ -13,8 +13,8 @@ class Auction:
         :param auction_id: (int) the ID of the auction that the bid was on
         """
         self.auction_id = auction_id
-        self.highest_bid=None 
-        self.bids=[]
+        self.highest_bid = None 
+        self.bids = []
 
     def validate_bid(self, bid) -> str:
         """
