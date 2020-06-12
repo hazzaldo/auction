@@ -1,5 +1,6 @@
 from data.auction import Auction
 from data.bid import Bid
+import logging
 
 class AuctionList:
     """
@@ -11,6 +12,17 @@ class AuctionList:
         The constructor for the AuctionList class.
         """
         self.auctions = []
+        self.winning_bids_logs = []
+    
+    def compile_winning_bids_info(self) -> None:
+        """
+        Compile all th winning bids into message logs and append them to 'winning_bids_logs' instance variable List object
+        """
+        for auction in self.auctions:
+            if auction.highest_bid is None:
+                self.winning_bids_logs.append(f'For Auction: {auction.auction_id} - no valid bid was received \n')
+            else:
+                self.winning_bids_logs.append(f'For Auction: {auction.auction_id} - Account: {auction.highest_bid.account_id} won the bid of amount: {auction.highest_bid.amount} \n')
 
     def get_auction_by_id(self, id: int) -> Auction:
         """
