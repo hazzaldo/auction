@@ -16,7 +16,7 @@ class Auction:
         self.highest_bid = None 
         self.bids = []
 
-    def validate_bid(self, bid) -> str:
+    def validate_bid(self, bid: Bid) -> str:
         """
         Validates the bid
         
@@ -35,7 +35,7 @@ class Auction:
         else:
             return "Error, the passed bid's auction id does not match the current auction instance's auction id"
 
-    def is_bid_higher(self, bid) -> bool:
+    def is_bid_higher(self, bid: Bid) -> bool:
         """
         Checks if the incoming bid is higher than the current highest bid
         
@@ -49,7 +49,7 @@ class Auction:
         else:
             return False
 
-    def is_bid_lagging(self, bid) -> bool:
+    def is_bid_lagging(self, bid: Bid) -> bool:
         """
         Checks if the incoming bid is lagging
         
@@ -60,43 +60,55 @@ class Auction:
             return True
         else:
             return False
-            
-    def get_accepted_bid_message(self, bid: Bid) -> str:
+    
+    def prefix_standard_message(self, bid_account_id: int) -> str:
         """
-        Get the accepted message log for the incoming bid as the new highest bid  
+        Returns a standard message as a prefix for other message logs  
         
-        :param bid: (Bid) the incoming bid
+        :param bid_account_id: (int) the incoming bid account ID
+        :return: (str) the standard message as the prefix message
+        """
+        return f'Auction ID: {self.auction_id}. Bid by {bid_account_id}. '
+
+    def get_accepted_bid_message(self, bid_account_id: int, bid_amount: int) -> str:
+        """
+        Returns the accepted message log for the incoming bid amount as the new highest bid  
+        
+        :param bid_account_id: (int) the incoming bid account ID
+        :param bid_amount: (int) the incoming bid amount
         :return: (str) the accepted bid message log
         """
-        return f'Auction ID: {self.auction_id}. Bid by {bid.account_id}. Bid with amount: {bid.amount} is now the new highest bid'
+        return self.prefix_standard_message(bid_account_id) + f'Bid with amount: {bid_amount} is now the new highest bid'
 
-    def get_insufficient_bid_message(self, bid: Bid) -> str:
+    def get_insufficient_bid_message(self, bid_account_id: int, bid_amount: int) -> str:
         """
-        Get the message log for the incoming bid with insufficient bid   
+        Returns the message log for the incoming bid with insufficient bid   
         
-        :param bid: (Bid) the incoming bid
+        :param bid_account_id: (int) the incoming bid account ID
+        :param bid_amount: (int) the incoming bid amount
         :return: (str) the insufficient bid message log
         """
-        return f'Auction ID: {self.auction_id}. Bid by {bid.account_id}. Bid with amount: {bid.amount} is insufficient.'
+        return self.prefix_standard_message(bid_account_id) + f'Bid with amount: {bid_amount} is insufficient.'
 
-    def get_insufficient_lagging_bid_message(self, bid: Bid) -> str:
+    def get_insufficient_lagging_bid_message(self, bid_account_id: int, bid_amount: int) -> str:
         """
-        Get the message log for the incoming bid with insufficient bid and lagging   
+        Returns the message log for the incoming bid with insufficient and lagging bid  
         
-        :param bid: (Bid) the incoming bid
+        :param bid_account_id: (int) the incoming bid account ID
+        :param bid_amount: (int) the incoming bid amount
         :return: (str) the insufficient and lagging bid message log
         """
-        return f'Auction ID: {self.auction_id}. Bid by {bid.account_id}. Bid with amount: {bid.amount} is insufficient.'
+        return self.prefix_standard_message(bid_account_id) + f'Bid with amount: {bid_amount} is insufficient.'
 
-    def get_invalid_bid_message(self, bid: Bid, error: str) -> str:
+    def get_invalid_bid_message(self, bid_account_id: int, error: str) -> str:
         """
-        Get the message log for an invalid bid   
+        Returns the message log for an invalid bid   
         
-        :param bid: (Bid) the incoming bid
+        :param bid_account_id: (int) the incoming bid account ID
         :param error: (str) the error passed from bid validation
         :return: (str) the invalid bid message log
         """
-        return f'Auction ID: {self.auction_id}. Bid by {bid.account_id}. ' + error
+        return self.prefix_standard_message(bid_account_id) + error
 
     def process_bid(self, bid: Bid) -> str:
         """
@@ -107,11 +119,11 @@ class Auction:
         """
         error = self.validate_bid(bid)
         if error:
-            return self.get_invalid_bid_message(bid, error)
+            return self.get_invalid_bid_message(bid.account_id, error)
         else:
             if self.is_bid_higher(bid):
-                return self.get_accepted_bid_message(bid)
+                return self.get_accepted_bid_message(bid.account_id, bid.amount)
             elif not self.is_bid_lagging(bid):
-                return self.get_insufficient_bid_message(bid)
+                return self.get_insufficient_bid_message(bid.account_id, bid.amount)
             else: 
-                return self.get_insufficient_lagging_bid_message(bid)
+                return self.get_insufficient_lagging_bid_message(bid.account_id, bid.amount)
