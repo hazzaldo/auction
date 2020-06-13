@@ -14,13 +14,22 @@ class Auction:
         """
         self.auction_id = auction_id
         self.highest_bid = None 
+        self.latest_processed_bid = None
         self.bids = []
+
+    def set_latest_processed_bid(self, bid: Bid) -> None:
+        """
+        Set the latest processed bid (the bid that just got processed)
+        
+        :param bid: (Bid) the current received bid
+        """
+        self.latest_processed_bid = bid
 
     def validate_bid(self, bid: Bid) -> str:
         """
         Validates the bid
         
-        :param bid: (Bid) the bid to validate
+        :param bid: (Bid) the current received bid to validate
         :return: (str) error message if bid is invalid, otherwise empty string
         """
         if bid.auction_id == self.auction_id:
@@ -37,10 +46,10 @@ class Auction:
 
     def is_bid_higher(self, bid: Bid) -> bool:
         """
-        Checks if the incoming bid is higher than the current highest bid
+        Checks if the current received bid is higher than the current highest bid
         
-        :param bid: (Bid) the incoming bid to check
-        :return: (bool) True if incoming bid is higher than current highest bid, otherwise False
+        :param bid: (Bid) the current received bid to check
+        :return: (bool) True if current received bid is higher than current highest bid, otherwise False
         """
         if self.highest_bid is None or bid.amount > self.highest_bid.amount:
             self.highest_bid = bid
@@ -51,12 +60,14 @@ class Auction:
 
     def is_bid_lagging(self, bid: Bid) -> bool:
         """
-        Checks if the incoming bid is lagging
+        Checks if the current received bid is lagging
         
-        :param bid: (Bid) the incoming bid to check
-        :return: (bool) True if incoming bid is lagging, otherwise False
+        :param bid: (Bid) the current received bid to check
+        :return: (bool) True if current received bid is lagging, otherwise False
         """
-        if bid.time_unit < self.highest_bid.time_unit:
+        if self.latest_processed_bid is None:
+            return False
+        elif bid.time_unit < self.latest_processed_bid.time_unit:
             return True
         else:
             return False
@@ -65,37 +76,37 @@ class Auction:
         """
         Returns a standard message as a prefix for other message logs  
         
-        :param bid_account_id: (int) the incoming bid account ID
+        :param bid_account_id: (int) the current received bid account ID
         :return: (str) the standard message as the prefix message
         """
         return f'Auction ID: {self.auction_id}. Bid by {bid_account_id}. '
 
     def get_accepted_bid_message(self, bid_account_id: int, bid_amount: int) -> str:
         """
-        Returns the accepted message log for the incoming bid amount as the new highest bid  
+        Returns the accepted message log for the current received bid amount as the new highest bid  
         
-        :param bid_account_id: (int) the incoming bid account ID
-        :param bid_amount: (int) the incoming bid amount
+        :param bid_account_id: (int) the current received bid account ID
+        :param bid_amount: (int) the current received bid amount
         :return: (str) the accepted bid message log
         """
         return self.prefix_standard_message(bid_account_id) + f'Bid with amount: {bid_amount} is now the new highest bid'
 
     def get_insufficient_bid_message(self, bid_account_id: int, bid_amount: int) -> str:
         """
-        Returns the message log for the incoming bid with insufficient bid   
+        Returns the message log for the current received bid with insufficient bid   
         
-        :param bid_account_id: (int) the incoming bid account ID
-        :param bid_amount: (int) the incoming bid amount
+        :param bid_account_id: (int) the current received bid account ID
+        :param bid_amount: (int) the current received bid amount
         :return: (str) the insufficient bid message log
         """
         return self.prefix_standard_message(bid_account_id) + f'Bid with amount: {bid_amount} is insufficient.'
 
     def get_insufficient_lagging_bid_message(self, bid_account_id: int, bid_amount: int) -> str:
         """
-        Returns the message log for the incoming bid with insufficient and lagging bid  
+        Returns the message log for the current received bid with insufficient and lagging bid  
         
-        :param bid_account_id: (int) the incoming bid account ID
-        :param bid_amount: (int) the incoming bid amount
+        :param bid_account_id: (int) the current received bid account ID
+        :param bid_amount: (int) the current received bid amount
         :return: (str) the insufficient and lagging bid message log
         """
         return self.prefix_standard_message(bid_account_id) + f'Bid with amount: {bid_amount} is insufficient and lagging'
@@ -104,7 +115,7 @@ class Auction:
         """
         Returns the message log for an invalid bid   
         
-        :param bid_account_id: (int) the incoming bid account ID
+        :param bid_account_id: (int) the current received bid account ID
         :param error: (str) the error passed from bid validation
         :return: (str) the invalid bid message log
         """
@@ -112,9 +123,9 @@ class Auction:
 
     def process_bid(self, bid: Bid) -> str:
         """
-        Processes the bid for a number of outcomes 
+        Processes the current received bid for a number of outcomes 
         
-        :param bid: (Bid) the incoming bid to process
+        :param bid: (Bid) the current received bid to process
         :return: (str) the bid status message log
         """
         error = self.validate_bid(bid)
@@ -122,8 +133,11 @@ class Auction:
             return self.get_invalid_bid_message(bid.account_id, error)
         else:
             if self.is_bid_higher(bid):
+                self.set_latest_processed_bid(bid)
                 return self.get_accepted_bid_message(bid.account_id, bid.amount)
             elif not self.is_bid_lagging(bid):
+                self.set_latest_processed_bid(bid)
                 return self.get_insufficient_bid_message(bid.account_id, bid.amount)
             else: 
+                self.set_latest_processed_bid(bid)
                 return self.get_insufficient_lagging_bid_message(bid.account_id, bid.amount)
