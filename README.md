@@ -46,9 +46,8 @@ pytest -W ignore -s
 ### auction-test
 This is to test the ability of solving problems in python. 
 
-## The Task
-You have been given auction data to process. Your program has to ingest the data and work out which account 
-IDs win each auction and log them. The data is not in sequence meaning that you will get recieve the bids in random time order. There are some corrupt bid enteries which need to be filtered out and logged.
+## Functionality
+Given auction data to process, the program ingests the data and works out which account IDs win each auction and log them. The data is not in sequence - meaning the program can receive the bids in random time order and still be able to process them. Also there are some corrupt bid entries which the program can still filter out and log.
 
 ## Structure
 The project takes the following structure:
@@ -64,11 +63,8 @@ The project takes the following structure:
 │   └── main.py
 ```
 
-The data handler is housed in the ```__init__.py``` file in the data directory. It loads the data from the 
-CSV as soon as it's initialized. Use the ```.data``` property from the data handler to receive bid 
-objects to process. You are free to add your own modules in the ```src``` directory and use them as you wish. The program should work by running the ```main.py``` file.  
+The data handler is housed in the ```__init__.py``` file in the data directory. It loads the data from the CSV as soon as it's initialized. The ```.data``` property from the data handler is used to receive bid 
+objects to process. The program is launched by running the ```main.py``` file.  
 
-## Restrictions 
-Technically there's nothing stopping you from loading the CSV into pandas and performing data science 
-methods to calculate the winner for each auction. However, it's important to demonstrate your problem 
-solving skills when developing a system. Your program is supposed to handle the data as it comes in.
+Technically there's nothing stopping someone from loading the CSV into pandas and performing data science methods to calculate the winner for each auction. However, this program demonstrates problem 
+solving skills when developing a system. The program is supposed to handle the data as it comes in.
